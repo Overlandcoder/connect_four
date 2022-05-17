@@ -9,6 +9,7 @@ class Game
     intro_message
     @player1 = create_player(1)
     @player2 = create_player(2)
+    randomize_first_turn
   end
 
   def intro_message
@@ -20,6 +21,10 @@ class Game
     name = gets.chomp
     symbol = SYMBOLS[number - 1]
     Player.new(name, symbol)
+  end
+
+  def randomize_first_turn
+    @current_player = [@player1, @player2].sample
   end
 
   def play_game
