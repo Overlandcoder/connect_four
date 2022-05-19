@@ -38,15 +38,13 @@ describe Game do
       before do
         allow(game).to receive(:puts)
         game.instance_variable_set(:@current_player, player1)
-        allow(game).to receive(:gets).and_return('50')
+        allow(game).to receive(:gets).and_return('1\n')
       end
 
-      it 'returns the input' do
-        expect(game.solicit_move).to eq([5, 0])
-      end
-
-      it 'does not call #solicit_move again' do
-        expect(game).not_to receive(:solicit_move)
+      it 'stops loop and does not display error message' do
+        error_message = 'Invalid input, please enter a number between 1 and 7.'
+        expect(game).not_to receive(:puts).with(error_message)
+        game.solicit_move
       end
     end
 
@@ -54,7 +52,7 @@ describe Game do
       before do
         allow(game).to receive(:puts)
         game.instance_variable_set(:@current_player, player1)
-        allow(game).to receive(:gets).and_return('60')
+        allow(game).to receive(:gets).and_return('a\n')
       end
 
       it 'calls #solicit_move again' do
@@ -69,7 +67,7 @@ describe Game do
       allow(game).to receive(:current_player).and_return(player1)
     end
 
-    it 'places a token' do
+    xit 'places a token' do
       expect()
     end
   end
