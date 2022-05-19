@@ -1,25 +1,34 @@
+require 'pry-byebug'
+
 class Board
   attr_reader :board
 
   def initialize
-    @board = Array.new(6, Array.new(8))
-  end
-
-  # ignore
-  def insert_numbers(i = 0)
-    return if i == 6
-
-    board[i][0] = (i + 1) * 10
-    insert_numbers(i + 1)
+    @board = Array.new(6) { Array.new(7) }
   end
 
   def display(num = 0)
     return if num == 6
 
-    board.each do |array|
-      #array.each_index { |i| board[num][i] = '⚫' if i > 0 }
-    end
     p board[num]
     display(num + 1)
+  end
+
+  def place_token(number, symbol)
+    column = number - 1
+    row = find_available_row(column)
+    board[row][column] = symbol
+  end
+
+  private
+  
+  def find_available_row(row = 5, column)
+    return row if board[row][column].nil?
+
+    find_available_row(row - 1, column)
+  end
+
+  def slot_taken?(row, column)
+    board[row][column] == ('x' || 'o')
   end
 end
