@@ -36,8 +36,6 @@ describe Game do
   describe '#solicit_move' do
     context 'when given a valid move' do
       before do
-        allow(game).to receive(:puts)
-        game.instance_variable_set(:@current_player, player1)
         allow(game).to receive(:gets).and_return('1\n')
       end
 
@@ -48,15 +46,31 @@ describe Game do
       end
     end
 
-    context 'when given an invalid move' do
+    context 'when given an invalid move once, then a valid move' do
       before do
-        allow(game).to receive(:puts)
-        game.instance_variable_set(:@current_player, player1)
-        allow(game).to receive(:gets).and_return('a\n')
+        letter = 'a'
+        valid_input = '3'
+        allow(game).to receive(:gets).and_return(letter, valid_input)
       end
 
-      it 'calls #solicit_move again' do
-        expect(game).to receive(:solicit_move).once
+      it 'completes loop and displays error message once' do
+        error_message = 'Invalid input, please enter a number between 1 and 7.'
+        expect(game).to receive(:puts).with(error_message).once
+        game.solicit_move
+      end
+    end
+
+    context 'when given an invalid move twice, then a valid move' do
+      before do
+        letter = 'a'
+        large_num = '100'
+        valid_input = '1'
+        allow(game).to receive(:gets).and_return(letter, large_num, valid_input)
+      end
+
+      it 'completes loop and displays error message twice' do
+        error_message = 'Invalid input, please enter a number between 1 and 7.'
+        expect(game).to receive(:puts).with(error_message).twice
         game.solicit_move
       end
     end
