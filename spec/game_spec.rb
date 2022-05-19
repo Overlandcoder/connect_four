@@ -2,18 +2,9 @@ require_relative '../lib/game'
 
 describe Game do
   subject(:game) { described_class.new }
-  let(:board) { double(Board) }
+  let(:player1) { double(Player, name: 'John', symbol: '⚫') }
 
   describe '#play_game' do
-    before do
-      allow(game).to receive(:game_over?).and_return(true)
-      allow(game).to receive(:switch_turns)
-    end
-
-    it 'calls #setup' do
-      expect(game).to receive(:setup)
-      game.play_game
-    end
   end
 
   describe '#create_player' do
@@ -43,8 +34,6 @@ describe Game do
   end
 
   describe '#solicit_move' do
-    let(:player1) { double(Player, name: 'John', symbol: '⚫') }
-
     context 'when given a valid move' do
       before do
         allow(game).to receive(:puts)
@@ -72,6 +61,16 @@ describe Game do
         expect(game).to receive(:solicit_move).once
         game.solicit_move
       end
+    end
+  end
+
+  describe '#place_token' do
+    before do
+      allow(game).to receive(:current_player).and_return(player1)
+    end
+
+    it 'places a token' do
+      expect()
     end
   end
 
