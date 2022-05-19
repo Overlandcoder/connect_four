@@ -21,10 +21,9 @@ class Game
   def intro_message
     intro = <<-MESSAGE
 
-Let's play Connect Four! To mark a position, enter the corresponding number.
+Let's play Connect Four! To mark a position, enter a column number (1 to 7).
 
-For example, enter 50 to mark the left-most position on the bottom. Or,
-enter 51 to mark the position to the right of that.
+The left-most column is 1, and the right-most column is 7.
 
 We'll begin by having each player choose a name.
 MESSAGE
@@ -48,6 +47,8 @@ MESSAGE
 
     until game_over?
       @current_player = switch_turns
+      prompt_player
+      place_token(solicit_move)
     end
   end
 
@@ -67,7 +68,24 @@ MESSAGE
     current_player == player1 ? player2 : player1
   end
 
+  def prompt_player
+    puts "#{current_player.name}, make your move:"
+  end
+
   def solicit_move
-    puts "#{@current_player.name}, make your move:"
+    loop do
+      move = gets.chomp.to_i
+      return move if valid_move?(move)
+
+      puts 'Invalid input, please enter a number between 1 and 7.'
+    end
+  end
+
+  def valid_move?(move)
+    move.is_a?(Integer) && move.between?(1, 7)
+  end
+
+  def place_token
+
   end
 end
