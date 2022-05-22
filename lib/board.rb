@@ -35,15 +35,10 @@ class Board
   end
 
   def horizontal_win?(symbol, row = 0, columns = [0, 1, 2, 3])
-    return false if row == 6
-    return true if columns.all? { |column| grid[row][column] == symbol }
-
-    columns.map! { |column| column += 1 }
-
-    if columns == [4, 5, 6, 7]
-      horizontal_win?(symbol, row + 1)
-    else
-      horizontal_win?(symbol, row, columns)
+    grid.any? do |row|
+      row.each_cons(4) do |chunk|
+        return true if chunk.all? { |slot| slot == symbol }
+      end
     end
   end
 
@@ -61,6 +56,28 @@ class Board
   end
 
   def diagonal_win?(symbol)
+    top_left_to_bottom_right?(symbol) || top_right_to_bottom_left?(symbol)
+  end
+
+  def top_left_to_bottom_right?(symbol, row = 0, column = 0, count = 0)
+    return true if count == 4
+    return if grid[row].nil?
+
+    if grid[row][column] == symbol
+      count += 1
+    else
+      count = 0
+    end
+    
+    if row == 6
+      row = 0
+      top_left_to_bottom_right?(symbol, row + 1)
+    else
+      top_left_to_bottom_right?(symbol, row + 1, column + 1, count)
+    end
+  end
+
+  def top_right_to_bottom_left?(symbol)
 
   end
 
