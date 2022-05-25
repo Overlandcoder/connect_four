@@ -36,8 +36,8 @@ class Board
 
   def horizontal_win?(symbol, row = 0, columns = [0, 1, 2, 3])
     grid.any? do |row|
-      row.each_cons(4) do |chunk|
-        return true if chunk.all? { |slot| slot == symbol }
+      row.each_cons(4) do |four_slots|
+        return true if four_slots.all? { |slot| slot == symbol }
       end
     end
   end
@@ -56,29 +56,77 @@ class Board
   end
 
   def diagonal_win?(symbol)
-    top_left_to_bottom_right?(symbol) || top_right_to_bottom_left?(symbol)
-  end
+    diagonals = create_diagonals
 
-  def top_left_to_bottom_right?(symbol, row = 0, column = 0, count = 0)
-    return true if count == 4
-    return if grid[row].nil?
-
-    if grid[row][column] == symbol
-      count += 1
-    else
-      count = 0
-    end
-    
-    if row == 6
-      row = 0
-      top_left_to_bottom_right?(symbol, row + 1)
-    else
-      top_left_to_bottom_right?(symbol, row + 1, column + 1, count)
+    diagonals.any? do |diagonal_set|
+      diagonal_set.all? do |coords|
+        grid[coords[0]][coords[1]] == symbol
+      end
     end
   end
 
-  def top_right_to_bottom_left?(symbol)
+  def create_diagonals
+    diagonals = []
 
+    grid.each_with_index do |row, row_idx|
+      row.each_index do |col_idx|
+        diagonals << bottom_right_diagonal(row_idx, col_idx)
+        diagonals << top_right_diagonal(row_idx, col_idx)
+        diagonals << bottom_left_diagonal(row_idx, col_idx)
+        diagonals << top_left_diagonal(row_idx, col_idx)
+      end
+    end
+
+    diagonals.reject { |diagonal| diagonal.length < 4 }
+    diagonals
+  end
+
+  def bottom_right_diagonal(row, col)
+    diagonal = [[row, col]]
+
+    3.times do
+      unless diagonal[-1][0] == 5 || diagonal[-1][1] == 6
+        diagonal << [diagonal[-1][0] + 1, diagonal[-1][1] + 1]
+      end
+    end
+
+    diagonal
+  end
+
+  def top_right_diagonal(row, col)
+    diagonal = [[row, col]]
+
+    3.times do
+      unless diagonal[-1][0] == 0 || diagonal[-1][1] == 6
+        diagonal << [diagonal[-1][0] - 1, diagonal[-1][1] + 1]
+      end
+    end
+
+    diagonal
+  end
+
+  def bottom_left_diagonal(row, col)
+    diagonal = [[row, col]]
+
+    3.times do
+      unless diagonal[-1][0] == 5 || diagonal[-1][1] == 0
+        diagonal << [diagonal[-1][0] + 1, diagonal[-1][1] - 1]
+      end
+    end
+
+    diagonal
+  end
+
+  def top_left_diagonal(row, col)
+    diagonal = [[row, col]]
+
+    3.times do
+      unless diagonal[-1][0] == 0 || diagonal[-1][1] == 0
+        diagonal << [diagonal[-1][0] - 1, diagonal[-1][1] - 1]
+      end
+    end
+
+    diagonal
   end
 
   private
