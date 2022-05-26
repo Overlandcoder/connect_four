@@ -24,6 +24,15 @@ class Board
     game_won?(symbol) || full?
   end
 
+  private
+  
+  def find_available_row(row = 5, column)
+    return row if grid[row][column] != '⚫' && grid[row][column] != '⚪'
+    return if row < 0
+
+    find_available_row(row - 1, column)
+  end
+
   def full?
     grid.all? do |row|
       row.all? { |slot| slot == '⚫' || slot == '⚪' }
@@ -100,14 +109,5 @@ class Board
     end
 
     diagonal
-  end
-
-  private
-  
-  def find_available_row(row = 5, column)
-    return row if grid[row][column] != '⚫' && grid[row][column] != '⚪'
-    return if row < 0
-
-    find_available_row(row - 1, column)
   end
 end
