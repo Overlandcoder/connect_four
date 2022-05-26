@@ -26,7 +26,7 @@ class Board
 
   def full?
     grid.all? do |row|
-      row.all? { |slot| slot == ('⚫' || '⚪') }
+      row.all? { |slot| slot == '⚫' || slot == '⚪' }
     end
   end
 
