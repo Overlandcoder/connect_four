@@ -4,14 +4,14 @@ class Board
   attr_reader :grid
 
   def initialize
-    @grid = Array.new(6) { Array.new(7, ' ') }
+    @grid = Array.new(6) { Array.new(7, '  ') }
   end
 
-  def display(num = 0)
-    return if num == 6
-
-    p grid[num]
-    display(num + 1)
+  def display
+    puts
+    p (1..7).to_a.join('   ')
+    puts '----------------------------'
+    (0..5).each { |i| p grid[i].join('| ') }
   end
 
   def place_token(number, symbol)
@@ -26,7 +26,7 @@ class Board
 
   def full?
     grid.all? do |row|
-      row.all? { |slot| slot == ('x' || 'o') }
+      row.all? { |slot| slot == ('⚫' || '⚪') }
     end
   end
 
@@ -70,18 +70,15 @@ class Board
 
     grid.each_with_index do |row, row_idx|
       row.each_index do |col_idx|
-        diagonals << bottom_right_diagonal(row_idx, col_idx)
-        diagonals << top_right_diagonal(row_idx, col_idx)
-        diagonals << bottom_left_diagonal(row_idx, col_idx)
-        diagonals << top_left_diagonal(row_idx, col_idx)
+        diagonals << right_diagonal(row_idx, col_idx)
+        diagonals << left_diagonal(row_idx, col_idx)
       end
     end
 
-    diagonals.reject { |diagonal| diagonal.length < 4 }
-    diagonals
+    diagonals.reject! { |diagonal| diagonal.length < 4 }
   end
 
-  def bottom_right_diagonal(row, col)
+  def right_diagonal(row, col)
     diagonal = [[row, col]]
 
     3.times do
@@ -93,19 +90,7 @@ class Board
     diagonal
   end
 
-  def top_right_diagonal(row, col)
-    diagonal = [[row, col]]
-
-    3.times do
-      unless diagonal[-1][0] == 0 || diagonal[-1][1] == 6
-        diagonal << [diagonal[-1][0] - 1, diagonal[-1][1] + 1]
-      end
-    end
-
-    diagonal
-  end
-
-  def bottom_left_diagonal(row, col)
+  def left_diagonal(row, col)
     diagonal = [[row, col]]
 
     3.times do
@@ -117,22 +102,10 @@ class Board
     diagonal
   end
 
-  def top_left_diagonal(row, col)
-    diagonal = [[row, col]]
-
-    3.times do
-      unless diagonal[-1][0] == 0 || diagonal[-1][1] == 0
-        diagonal << [diagonal[-1][0] - 1, diagonal[-1][1] - 1]
-      end
-    end
-
-    diagonal
-  end
-
   private
   
   def find_available_row(row = 5, column)
-    return row if grid[row][column] != 'x' && grid[row][column] != 'o'
+    return row if grid[row][column] != '⚫' && grid[row][column] != '⚪'
     return if row < 0
 
     find_available_row(row - 1, column)
