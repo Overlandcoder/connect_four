@@ -101,4 +101,23 @@ describe Game do
       end
     end
   end
+
+  describe '#play_round' do
+    before do
+      allow(game).to receive(:prompt_player)
+      allow(game).to receive(:current_player).and_return(player1)
+      allow(game).to receive(:solicit_move).and_return(1)
+    end
+
+    it 'sends #place_token to board' do
+      allow(game.board).to receive(:display)
+      expect(game.board).to receive(:place_token).with(1, '⚫')
+      game.play_round
+    end
+
+    it 'sends #display to board' do
+      expect(game.board).to receive(:display)
+      game.play_round
+    end
+  end
 end
