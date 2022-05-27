@@ -71,12 +71,12 @@ MESSAGE
       move = gets.chomp.to_i
       return move if valid_move?(move)
 
-      puts 'Invalid input, please enter a number between 1 and 7.'
+      puts 'Invalid input, please choose an empty column between 1 and 7.'
     end
   end
 
   def valid_move?(move)
-    move.is_a?(Integer) && move.between?(1, 7)
+    move.is_a?(Integer) && move.between?(1, 7) && board.grid[0][move - 1] == '  '
   end
 
   def conclusion
