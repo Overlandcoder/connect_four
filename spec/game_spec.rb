@@ -3,6 +3,7 @@ require_relative '../lib/game'
 describe Game do
   subject(:game) { described_class.new }
   let(:player1) { double(Player, name: 'John', symbol: '⚫') }
+  let(:board) { double(Board) }
 
   describe '#play_game' do
   end
@@ -76,20 +77,41 @@ describe Game do
     end
   end
 
-  describe '#place_token' do
-    before do
-      allow(game).to receive(:current_player).and_return(player1)
-    end
+  describe '#play_game' do
+    context 'when #board.full? is false four times' do
+      before do
+        allow(game).to receive(:setup)
+        allow(game).to receive(:current_player).and_return(player1)
+        allow(game).to receive(:gets).and_return('1\n')
+        allow(board).to receive(:full?).and_return(false, false, false, false, true)
+      end
 
-    xit 'places a token' do
-      expect()
-    end
-  end
+      it 'calls #switch_turns four times' do
+        allow(board).to receive(:display)
+        expect(game).to receive(:switch_turns).exactly(4).times
+        game.play_game
+      end
 
-  describe '#game_over' do
-    context 'when board is empty' do
-      xit 'is not game over' do
-        expect(game).not_to be_game_over
+      it 'calls #prompt_player four times' do
+        allow(board).to receive(:display)
+        expect(game).to receive(:prompt_player).exactly(4).times
+        game.play_game
+      end
+
+      xit 'calls #solicit_move four times' do
+        expect(game).to receive(:solicit_move).exactly(4).times
+        game.play_game
+      end
+
+      xit 'sends #place_token to board' do
+        allow(game).to receive(:solicit_move).and_return(1)
+        expect(board).to receive(:place_token).with(1, '⚫').exactly(4).times
+        game.play_game
+      end
+
+      xit 'sends #display to board' do
+        expect(board).to receive(:display).exactly(4).times
+        game.play_game
       end
     end
   end
