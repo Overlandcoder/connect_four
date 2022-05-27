@@ -24,13 +24,8 @@ class Board
     game_won?(symbol) || full?
   end
 
-  private
-  
-  def find_available_row(row = 5, column)
-    return row if grid[row][column] != '⚫' && grid[row][column] != '⚪'
-    return if row < 0
-
-    find_available_row(row - 1, column)
+  def game_won?(symbol)
+    horizontal_win?(symbol) || vertical_win?(symbol) || diagonal_win?(symbol)
   end
 
   def full?
@@ -39,8 +34,13 @@ class Board
     end
   end
 
-  def game_won?(symbol)
-    horizontal_win?(symbol) || vertical_win?(symbol) || diagonal_win?(symbol)
+  private
+  
+  def find_available_row(row = 5, column)
+    return row if grid[row][column] != '⚫' && grid[row][column] != '⚪'
+    return if row < 0
+
+    find_available_row(row - 1, column)
   end
 
   def horizontal_win?(symbol, row = 0, columns = [0, 1, 2, 3])
