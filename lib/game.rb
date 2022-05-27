@@ -2,7 +2,7 @@ require_relative 'player'
 require_relative 'board'
 
 class Game
-  attr_reader :player1, :positions, :board, :current_player
+  attr_reader :player1, :player2, :positions, :board, :current_player
 
   SYMBOLS = ['⚫', '⚪']
 
@@ -11,8 +11,8 @@ class Game
   end
 
   def setup
-    board.display
     intro_message
+    board.display
     @player1 = create_player(1)
     @player2 = create_player(2)
     randomize_first_turn
@@ -21,11 +21,11 @@ class Game
   def intro_message
     intro = <<-MESSAGE
 
-Let's play Connect Four! To mark a position, enter a column number (1 to 7).
+Let's play Connect Four!
 
-The left-most column is 1, and the right-most column is 7.
+The first player to connect 4 pieces consecutively (horizontally, vertically or diagonally) wins.
 
-We'll begin by having each player choose a name.
+To place a piece, enter a column number (1 to 7).
 MESSAGE
     puts intro
   end
@@ -39,29 +39,23 @@ MESSAGE
 
   def randomize_first_turn
     @current_player = [@player1, @player2].sample
-    puts "\n#{@current_player.name} will go first."
   end
 
   def play_game
     setup
 
-    until game_over?
+    until board.game_over?(current_player.symbol)
       @current_player = switch_turns
-      prompt_player
-      place_token(solicit_move)
+      play_round
     end
+    conclusion
   end
 
-  def game_over?
-    #game_won? || game_tied?
-  end
-
-  def game_won?
-    horizontal_win? || vertical_win? || diagonal_win?
-  end
-
-  def horizontal_win?
-
+  def play_round
+    prompt_player
+    move = solicit_move
+    board.place_token(move, current_player.symbol)
+    board.display
   end
 
   def switch_turns
@@ -69,7 +63,7 @@ MESSAGE
   end
 
   def prompt_player
-    puts "#{current_player.name}, make your move:"
+    puts "\n#{current_player.name}, make your move:"
   end
 
   def solicit_move
@@ -85,7 +79,8 @@ MESSAGE
     move.is_a?(Integer) && move.between?(1, 7)
   end
 
-  def place_token
-
+  def conclusion
+    puts "\n#{current_player.name} wins!" if board.game_won?(current_player.symbol)
+    puts 'Tie game.' if board.full?
   end
 end
