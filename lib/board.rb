@@ -9,9 +9,9 @@ class Board
 
   def display
     puts
-    p (1..7).to_a.join('   ')
+    puts ' ' + (1..7).to_a.join('   ')
     puts '----------------------------'
-    (0..5).each { |i| p grid[i].join('| ') }
+    (0..5).each { |i| puts grid[i].join('| ') }
   end
 
   def place_token(number, symbol)
@@ -79,17 +79,15 @@ class Board
 
     grid.each_with_index do |row, row_idx|
       row.each_index do |col_idx|
-        diagonals << right_diagonal(row_idx, col_idx)
-        diagonals << left_diagonal(row_idx, col_idx)
+        diagonals << right_diagonal([[row_idx, col_idx]])
+        diagonals << left_diagonal([[row_idx, col_idx]])
       end
     end
 
     diagonals.reject! { |diagonal| diagonal.length < 4 }
   end
 
-  def right_diagonal(row, col)
-    diagonal = [[row, col]]
-
+  def right_diagonal(diagonal)
     3.times do
       unless diagonal[-1][0] == 5 || diagonal[-1][1] == 6
         diagonal << [diagonal[-1][0] + 1, diagonal[-1][1] + 1]
@@ -99,9 +97,7 @@ class Board
     diagonal
   end
 
-  def left_diagonal(row, col)
-    diagonal = [[row, col]]
-
+  def left_diagonal(diagonal)
     3.times do
       unless diagonal[-1][0] == 5 || diagonal[-1][1] == 0
         diagonal << [diagonal[-1][0] + 1, diagonal[-1][1] - 1]
