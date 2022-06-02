@@ -1,5 +1,4 @@
 require_relative '../lib/game'
-require 'pry-byebug'
 
 describe Game do
   subject(:game) { described_class.new }
@@ -39,7 +38,7 @@ describe Game do
       end
 
       it 'stops loop and does not display error message' do
-        error_message = 'Invalid input, please enter a number between 1 and 7.'
+        error_message = 'Invalid input, please choose an empty column between 1 and 7.'
         expect(game).not_to receive(:puts).with(error_message)
         game.solicit_move
       end
@@ -53,7 +52,7 @@ describe Game do
       end
 
       it 'completes loop and displays error message once' do
-        error_message = 'Invalid input, please enter a number between 1 and 7.'
+        error_message = 'Invalid input, please choose an empty column between 1 and 7.'
         expect(game).to receive(:puts).with(error_message).once
         game.solicit_move
       end
@@ -68,7 +67,7 @@ describe Game do
       end
 
       it 'completes loop and displays error message twice' do
-        error_message = 'Invalid input, please enter a number between 1 and 7.'
+        error_message = 'Invalid input, please choose an empty column between 1 and 7.'
         expect(game).to receive(:puts).with(error_message).twice
         game.solicit_move
       end
